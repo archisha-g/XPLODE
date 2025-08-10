@@ -135,8 +135,16 @@
   }
 
   body {
-    @apply bg-mobile-frame text-foreground overflow-hidden;
+    @apply bg-mobile-frame text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Prevent zoom on double tap for iOS */
+    touch-action: manipulation;
+    /* Prevent text size adjustment on iOS */
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
   }
 
   /* Hide scrollbars globally */
@@ -153,16 +161,39 @@
   .mobile-frame {
     background: hsl(var(--mobile-frame));
     min-height: 100vh;
+    min-height: 100dvh; /* Dynamic viewport height for mobile */
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 3rem 1rem;
+    padding: 2rem 1rem;
     box-sizing: border-box;
+    overflow: auto;
+    position: relative;
+  }
+
+  /* Ensure proper scaling on all devices */
+  @media screen and (max-width: 768px) {
+    .mobile-frame {
+      padding: 1rem 0.5rem;
+      align-items: flex-start;
+      padding-top: 2rem;
+    }
+  }
+
+  /* Mac/Safari specific fixes */
+  @media screen and (-webkit-min-device-pixel-ratio: 1) {
+    .mobile-frame {
+      -webkit-overflow-scrolling: touch;
+      transform: scale(1);
+      transform-origin: center top;
+    }
   }
 
   .mobile-screen {
     width: 420px;
     height: 900px;
+    max-width: 90vw;
+    max-height: 90vh;
     background: var(--gradient-purple);
     border-radius: 2.5rem;
     overflow: hidden;
@@ -175,6 +206,51 @@
       0 5px 20px rgba(0, 0, 0, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.1),
       inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  /* Responsive scaling for smaller screens */
+  @media screen and (max-width: 480px) {
+    .mobile-screen {
+      width: 95vw;
+      height: 85vh;
+      border-radius: 1.5rem;
+    }
+  }
+
+  /* Ensure proper scaling on Mac/Safari */
+  @media screen and (max-height: 900px) {
+    .mobile-screen {
+      height: 85vh;
+      transform: scale(0.9);
+      transform-origin: center;
+    }
+  }
+
+  /* Force bottom navigation visibility on all devices */
+  .bottom-nav-fixed {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 9999 !important;
+    width: 420px !important;
+    max-width: 90vw !important;
+  }
+
+  /* Mac/Safari specific bottom navigation fixes */
+  @supports (-webkit-appearance: none) {
+    .bottom-nav-fixed {
+      bottom: env(safe-area-inset-bottom, 0px) !important;
+      padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+    }
+  }
+
+  /* Responsive bottom navigation */
+  @media screen and (max-width: 480px) {
+    .bottom-nav-fixed {
+      width: 95vw !important;
+      border-radius: 1rem !important;
+    }
   }
 
   /* Gradient utilities */

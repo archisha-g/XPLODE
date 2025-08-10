@@ -312,7 +312,7 @@ const MainDashboard = () => {
       </div>
 
       {/* Bottom navigation - WinZO style - Fixed position */}
-      <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-[420px] flex items-center justify-between px-4 py-3 bg-gradient-to-r from-game-purple-dark via-game-purple to-game-purple-dark backdrop-blur-md border-t-2 border-gold/30 z-[100] shadow-lg">
+      <div className="bottom-nav-fixed flex items-center justify-between px-4 py-3 bg-gradient-to-r from-game-purple-dark via-game-purple to-game-purple-dark backdrop-blur-md border-t-2 border-gold/30 shadow-lg rounded-t-2xl">
         {[
           { name: 'Heat Streak', icon: 'Streak', action: () => navigateTo('heatStreak'), color: 'text-orange-400' },
           { name: 'Reward Chests', icon: 'Chests', action: () => navigateTo('rewardChests'), color: 'text-yellow-400' },
