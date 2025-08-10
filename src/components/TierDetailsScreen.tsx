@@ -108,6 +108,12 @@ const TierDetailsScreen = () => {
 
   return (
     <div className={`h-full w-full bg-gradient-to-br ${currentLevel.color} flex flex-col overflow-hidden relative`}>
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10">
+        <div className="absolute top-20 left-8 text-8xl transform rotate-12">👑</div>
+        <div className="absolute bottom-32 right-12 text-6xl transform -rotate-12">🐉</div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-9xl opacity-5">🔥</div>
+      </div>
       {/* Status bar */}
       <div className="flex justify-between items-center px-6 py-4 text-white text-sm font-medium">
         <RealTimeClock />

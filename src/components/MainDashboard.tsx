@@ -107,7 +107,7 @@ const MainDashboard = () => {
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg px-3 py-1 border-2 border-gold/50 shadow-glow-gold">
             <Star className="w-4 h-4 text-gold animate-pulse-gold" />
-            <span className="text-foreground font-bold">VIP 6</span>
+            <span className="text-foreground font-bold">12k XP</span>
             <div className="w-4 h-4 rounded-full bg-gradient-gold flex items-center justify-center">
               <span className="text-game-purple text-xs">👑</span>
             </div>
@@ -169,22 +169,6 @@ const MainDashboard = () => {
           >
             <Gift className="w-5 h-5 text-warning" />
             <span className="text-foreground text-sm font-medium">QUESTS</span>
-          </button>
-          
-          <button 
-            onClick={() => navigateTo('heatStreak')}
-            className="flex items-center space-x-2 hover:scale-105 transition-transform"
-          >
-            <span className="w-5 h-5 text-orange-500">🔥</span>
-            <span className="text-foreground text-sm font-medium">STREAK</span>
-          </button>
-          
-          <button 
-            onClick={() => navigateTo('rewardChests')}
-            className="flex items-center space-x-2 hover:scale-105 transition-transform"
-          >
-            <span className="w-5 h-5 text-purple-500">📦</span>
-            <span className="text-foreground text-sm font-medium">CHESTS</span>
           </button>
           
           <button 

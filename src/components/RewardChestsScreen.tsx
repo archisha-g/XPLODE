@@ -77,13 +77,13 @@ const RewardChestsScreen = () => {
       setEarnedRewards(chest.rewards);
       setShowRewards(true);
       
-      // Close rewards after 3 seconds
+      // Close rewards after 4 seconds
       setTimeout(() => {
         setShowRewards(false);
         setSelectedChest(null);
         setEarnedRewards([]);
-      }, 3000);
-    }, 2000);
+      }, 4000);
+    }, 1500);
   };
 
   return (
