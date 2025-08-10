@@ -12,6 +12,8 @@ import TierDetailsScreen from '@/components/TierDetailsScreen';
 import DiwaliOfferScreen from '@/components/DiwaliOfferScreen';
 import HeatStreakScreen from '@/components/HeatStreakScreen';
 import RewardChestsScreen from '@/components/RewardChestsScreen';
+import PrivateLobbyScreen from '@/components/PrivateLobbyScreen';
+import PrivateGameScreen from '@/components/PrivateGameScreen';
 import { NavigationProvider, useNavigation } from '@/components/NavigationProvider';
 
 const AppContent = () => {
@@ -61,6 +63,10 @@ const AppContent = () => {
         return <HeatStreakScreen />;
       case 'rewardChests':
         return <RewardChestsScreen />;
+      case 'privateLobby':
+        return <PrivateLobbyScreen />;
+      case 'privateGame':
+        return <PrivateGameScreen />;
       default:
         return <SplashScreen onComplete={handleSplashComplete} />;
     }

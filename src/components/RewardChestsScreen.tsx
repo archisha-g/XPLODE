@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Gift, Star, Zap } from 'lucide-react';
+import { ArrowLeft, Gift, Star, Zap, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useNavigation } from './NavigationProvider';
@@ -9,6 +9,8 @@ const RewardChestsScreen = () => {
   const { navigateBack } = useNavigation();
   const [selectedChest, setSelectedChest] = useState<string | null>(null);
   const [openingChest, setOpeningChest] = useState(false);
+  const [showRewards, setShowRewards] = useState(false);
+  const [earnedRewards, setEarnedRewards] = useState<string[]>([]);
   
   const availableChests = [
     {
@@ -63,14 +65,24 @@ const RewardChestsScreen = () => {
   ];
 
   const handleOpenChest = (chestId: string) => {
+    const chest = [...availableChests, ...platinumChests].find(c => c.id === chestId);
+    if (!chest) return;
+    
     setSelectedChest(chestId);
     setOpeningChest(true);
     
     // Simulate chest opening animation
     setTimeout(() => {
       setOpeningChest(false);
-      setSelectedChest(null);
-      // Here you would update the chest progress and add rewards
+      setEarnedRewards(chest.rewards);
+      setShowRewards(true);
+      
+      // Close rewards after 3 seconds
+      setTimeout(() => {
+        setShowRewards(false);
+        setSelectedChest(null);
+        setEarnedRewards([]);
+      }, 3000);
     }, 2000);
   };
 
@@ -125,8 +137,10 @@ const RewardChestsScreen = () => {
           {availableChests.map((chest) => (
             <div 
               key={chest.id}
-              className={`bg-gradient-to-r ${chest.color} rounded-2xl p-4 shadow-glow-premium`}
+              className={`bg-gradient-to-r ${chest.color} rounded-2xl p-4 shadow-glow-premium hover:scale-105 transition-all duration-300 animate-shimmer relative overflow-hidden`}
             >
+              {/* Shimmer effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shine"></div>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-3">
                   <div className="text-3xl">{chest.icon}</div>
@@ -138,10 +152,17 @@ const RewardChestsScreen = () => {
                 {chest.progress >= chest.maxProgress ? (
                   <Button 
                     onClick={() => handleOpenChest(chest.id)}
-                    className="bg-white text-game-purple hover:bg-white/90 font-bold"
+                    className="bg-white text-game-purple hover:bg-white/90 font-bold animate-pulse-gold"
                     disabled={openingChest}
                   >
-                    {openingChest && selectedChest === chest.id ? 'Opening...' : 'Open'}
+                    {openingChest && selectedChest === chest.id ? (
+                      <span className="flex items-center space-x-1">
+                        <Sparkles className="w-4 h-4 animate-spin" />
+                        <span>Opening...</span>
+                      </span>
+                    ) : (
+                      'Open'
+                    )}
                   </Button>
                 ) : (
                   <span className="text-white/70 text-sm">Locked</span>
@@ -238,11 +259,41 @@ const RewardChestsScreen = () => {
 
       {/* Opening Animation Overlay */}
       {openingChest && (
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 text-center animate-pulse">
-            <div className="text-6xl mb-4">📦</div>
+        <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 text-center animate-scale-in shadow-2xl">
+            <div className="text-6xl mb-4 animate-bounce">📦</div>
             <div className="text-game-purple font-bold text-xl">Opening Chest...</div>
             <div className="text-game-purple/70 text-sm">Revealing your rewards!</div>
+            <div className="flex justify-center mt-4 space-x-1">
+              <div className="w-2 h-2 bg-game-purple rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 bg-game-purple rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+              <div className="w-2 h-2 bg-game-purple rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Rewards Display Overlay */}
+      {showRewards && (
+        <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50">
+          <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl p-8 text-center animate-scale-in shadow-2xl max-w-sm mx-4">
+            <div className="text-6xl mb-4 animate-bounce">🎉</div>
+            <div className="text-white font-bold text-2xl mb-2">Congratulations!</div>
+            <div className="text-white/90 text-sm mb-4">You earned these rewards:</div>
+            <div className="space-y-2">
+              {earnedRewards.map((reward, idx) => (
+                <div 
+                  key={idx} 
+                  className="bg-white/20 text-white px-3 py-2 rounded-lg font-medium animate-fade-in"
+                  style={{animationDelay: `${idx * 0.1}s`}}
+                >
+                  ✨ {reward}
+                </div>
+              ))}
+            </div>
+            <div className="text-white/80 text-xs mt-4">
+              Rewards added to your account!
+            </div>
           </div>
         </div>
       )}

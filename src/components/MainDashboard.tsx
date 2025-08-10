@@ -105,9 +105,12 @@ const MainDashboard = () => {
         </div>
         
         <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-1 bg-secondary/30 rounded-lg px-3 py-1">
-            <Star className="w-4 h-4 text-gold" />
-            <span className="text-foreground font-bold">12K</span>
+          <div className="flex items-center space-x-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg px-3 py-1 border-2 border-gold/50 shadow-glow-gold">
+            <Star className="w-4 h-4 text-gold animate-pulse-gold" />
+            <span className="text-foreground font-bold">VIP 6</span>
+            <div className="w-4 h-4 rounded-full bg-gradient-gold flex items-center justify-center">
+              <span className="text-game-purple text-xs">👑</span>
+            </div>
           </div>
           
           <button 
@@ -136,10 +139,16 @@ const MainDashboard = () => {
 
       {/* Navigation tabs */}
       <div className="flex px-6 py-2 space-x-6">
-        {['WINZOMANIA', 'DIWALI OFFER', 'TOURNAMENTS'].map((tab) => (
+        {['WINZOMANIA', 'DIWALI OFFER', 'PRIVATE LOBBY'].map((tab) => (
           <button
             key={tab}
-            onClick={() => setActiveTab(tab)}
+            onClick={() => {
+              if (tab === 'PRIVATE LOBBY') {
+                navigateTo('privateLobby');
+              } else {
+                setActiveTab(tab);
+              }
+            }}
             className={`text-sm font-bold py-2 px-1 border-b-2 transition-colors ${
               activeTab === tab 
                 ? 'text-warning border-warning' 
@@ -206,13 +215,25 @@ const MainDashboard = () => {
       {/* Main content */}
       <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6 pb-24">
         {activeTab === 'DIWALI OFFER' ? (
-          <div className="text-center py-8">
-            <Button 
-              onClick={() => navigateTo('diwaliOffer')}
-              className="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-400 hover:to-orange-500 text-white font-bold py-4 px-8 rounded-2xl shadow-glow-gold text-lg"
-            >
-              🪔 Explore Diwali Offers 🎆
-            </Button>
+          <div className="relative min-h-64 bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 rounded-2xl p-6 overflow-hidden">
+            {/* Floating emojis in background */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-4 left-8 text-2xl animate-float">🪔</div>
+              <div className="absolute top-16 right-12 text-xl animate-bounce" style={{animationDelay: '0.5s'}}>✨</div>
+              <div className="absolute bottom-16 left-12 text-2xl animate-pulse" style={{animationDelay: '1s'}}>🎆</div>
+              <div className="absolute bottom-8 right-8 text-xl animate-float" style={{animationDelay: '1.5s'}}>🎯</div>
+            </div>
+            
+            <div className="relative z-10 text-center py-8">
+              <h2 className="text-white text-2xl font-bold mb-4">🪔 Diwali Special 🎆</h2>
+              <p className="text-white/80 mb-6">Celebrate with amazing offers and rewards!</p>
+              <Button 
+                onClick={() => navigateTo('diwaliOffer')}
+                className="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-400 hover:to-orange-500 text-white font-bold py-4 px-8 rounded-2xl shadow-glow-gold text-lg animate-pulse-gold"
+              >
+                🪔 Explore Diwali Offers 🎆
+              </Button>
+            </div>
           </div>
         ) : (
           gameCategories.map((category, categoryIndex) => (
@@ -268,15 +289,16 @@ const MainDashboard = () => {
       {/* Bottom navigation */}
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-around py-4 bg-game-purple-dark/80 border-t border-border z-50">
         {[
-          { name: 'SLadder', icon: '🪜' },
-          { name: 'Diwali', icon: '🪔' },
+          { name: 'Streak', icon: '🔥', action: () => navigateTo('heatStreak') },
+          { name: 'Chests', icon: '📦', action: () => navigateTo('rewardChests') },
           { name: '', icon: '🎯', isActive: true },
           { name: 'Refer', icon: '👥' },
-          { name: 'Wallet', icon: '💳' }
+          { name: 'Wallet', icon: '💳', action: () => navigateTo('addCash') }
         ].map((item, index) => (
-          <div
+          <button
             key={index}
-            className={`flex flex-col items-center space-y-1 px-3 py-2 ${
+            onClick={item.action}
+            className={`flex flex-col items-center space-y-1 px-3 py-2 transition-transform hover:scale-105 ${
               item.isActive 
                 ? 'bg-gradient-gold rounded-full p-3' 
                 : ''
@@ -290,7 +312,7 @@ const MainDashboard = () => {
                 {item.name}
               </span>
             )}
-          </div>
+          </button>
         ))}
       </div>
     </div>

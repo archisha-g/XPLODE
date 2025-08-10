@@ -12,11 +12,15 @@ const AddCashScreen = ({ onBack }: AddCashScreenProps) => {
   const [selectedAmount, setSelectedAmount] = useState('');
   const [showKeypad, setShowKeypad] = useState(false);
   const [appliedCoupons, setAppliedCoupons] = useState<string[]>([]);
+  const [isEditing, setIsEditing] = useState(false);
 
   const quickAmounts = [
-    { value: '50', bonus: '50' },
-    { value: '200', bonus: '50' },
-    { value: '500', bonus: '50' }
+    { value: '50', bonus: '25', label: '₹50' },
+    { value: '100', bonus: '50', label: '₹100' },
+    { value: '200', bonus: '100', label: '₹200' },
+    { value: '500', bonus: '250', label: '₹500' },
+    { value: '1000', bonus: '500', label: '₹1000' },
+    { value: '2000', bonus: '1000', label: '₹2000' }
   ];
 
   const lectureOffers = [
@@ -25,6 +29,7 @@ const AddCashScreen = ({ onBack }: AddCashScreenProps) => {
       icon: '🎰', 
       title: 'Get your third lecture for Poker',
       subtitle: 'Minimum amount required to apply coupon is ₹500',
+      minAmount: 500,
       applied: appliedCoupons.includes('poker')
     },
     { 
@@ -32,6 +37,7 @@ const AddCashScreen = ({ onBack }: AddCashScreenProps) => {
       icon: '🃏', 
       title: 'Get your first lecture for Rummy',
       subtitle: 'Minimum amount required to apply coupon is ₹300',
+      minAmount: 300,
       applied: appliedCoupons.includes('rummy')
     },
     { 
@@ -39,6 +45,7 @@ const AddCashScreen = ({ onBack }: AddCashScreenProps) => {
       icon: '♟️', 
       title: 'Get your second lecture for Chess',
       subtitle: 'Minimum amount required to apply coupon is ₹400',
+      minAmount: 400,
       applied: appliedCoupons.includes('chess')
     }
   ];
@@ -46,6 +53,17 @@ const AddCashScreen = ({ onBack }: AddCashScreenProps) => {
   const handleQuickAmount = (value: string) => {
     setAmount(value);
     setSelectedAmount(value);
+    setIsEditing(false);
+  };
+
+  const canApplyCoupon = (minAmount: number) => {
+    return parseInt(amount) >= minAmount;
+  };
+
+  const handleApplyCoupon = (gameType: string, minAmount: number) => {
+    if (canApplyCoupon(minAmount)) {
+      setAppliedCoupons([...appliedCoupons, gameType]);
+    }
   };
 
   const bonusAmount = amount ? (parseInt(amount) * 0.5).toString() : '0';
@@ -93,10 +111,51 @@ const AddCashScreen = ({ onBack }: AddCashScreenProps) => {
         <div className="bg-card rounded-2xl p-6">
           <div className="text-center">
             <div className="text-primary text-sm mb-2">Enter Any Amount</div>
-            <div className="text-4xl font-bold text-foreground mb-4">₹{amount}</div>
+            {isEditing ? (
+              <div className="flex items-center justify-center mb-4">
+                <span className="text-4xl font-bold text-foreground mr-2">₹</span>
+                <input 
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  onBlur={() => setIsEditing(false)}
+                  onKeyDown={(e) => e.key === 'Enter' && setIsEditing(false)}
+                  className="text-4xl font-bold text-foreground bg-transparent border-b-2 border-primary focus:outline-none text-center w-32"
+                  autoFocus
+                />
+              </div>
+            ) : (
+              <button 
+                onClick={() => setIsEditing(true)}
+                className="text-4xl font-bold text-foreground mb-4 hover:text-primary transition-colors"
+              >
+                ₹{amount}
+              </button>
+            )}
             <div className="bg-success/20 text-success rounded-lg p-3 text-sm">
               You will get ₹{totalAmount} in your wallet
             </div>
+          </div>
+        </div>
+
+        {/* Quick Amount Selection */}
+        <div className="bg-card rounded-2xl p-4">
+          <h3 className="text-foreground font-bold mb-3">Quick Select</h3>
+          <div className="grid grid-cols-3 gap-2">
+            {quickAmounts.map((item) => (
+              <button
+                key={item.value}
+                onClick={() => handleQuickAmount(item.value)}
+                className={`p-3 rounded-xl font-medium transition-all ${
+                  selectedAmount === item.value || amount === item.value
+                    ? 'bg-gradient-gold text-game-purple shadow-glow-gold'
+                    : 'bg-secondary/20 text-foreground hover:bg-secondary/40'
+                }`}
+              >
+                <div className="text-sm">{item.label}</div>
+                <div className="text-xs opacity-80">+₹{item.bonus}</div>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -124,28 +183,52 @@ const AddCashScreen = ({ onBack }: AddCashScreenProps) => {
         <div>
           <div className="text-foreground font-bold text-lg mb-4">Special Offers</div>
           <div className="space-y-3">
-            {lectureOffers.filter(offer => !offer.applied).map((offer) => (
-              <div key={offer.game} className="bg-gradient-to-r from-card to-card-glow/30 border-2 border-gold/30 rounded-xl p-4 shadow-glow-gold">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-gradient-gold rounded-xl flex items-center justify-center shadow-lg">
-                      <span className="text-game-purple text-lg">{offer.icon}</span>
+            {lectureOffers.filter(offer => !offer.applied).map((offer) => {
+              const eligible = canApplyCoupon(offer.minAmount);
+              return (
+                <div 
+                  key={offer.game} 
+                  className={`rounded-xl p-4 border-2 transition-all ${
+                    eligible 
+                      ? 'bg-gradient-to-r from-card to-card-glow/30 border-gold/30 shadow-glow-gold'
+                      : 'bg-card/50 border-muted/30 opacity-60'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${
+                        eligible ? 'bg-gradient-gold' : 'bg-muted/30'
+                      }`}>
+                        <span className={`text-lg ${eligible ? 'text-game-purple' : 'text-muted-foreground'}`}>
+                          {offer.icon}
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-foreground font-bold text-sm">{offer.title}</div>
+                        <div className="text-foreground/70 text-xs mt-1">{offer.subtitle}</div>
+                        {!eligible && (
+                          <div className="text-warning text-xs mt-1 font-medium">
+                            Add ₹{offer.minAmount - parseInt(amount)} more to apply
+                          </div>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <div className="text-foreground font-bold text-sm">{offer.title}</div>
-                      <div className="text-foreground/70 text-xs mt-1">{offer.subtitle}</div>
-                    </div>
+                    <Button
+                      size="sm"
+                      onClick={() => handleApplyCoupon(offer.game, offer.minAmount)}
+                      disabled={!eligible}
+                      className={`font-bold px-4 py-2 text-xs ${
+                        eligible 
+                          ? 'bg-gradient-gold text-game-purple hover:opacity-90'
+                          : 'bg-muted text-muted-foreground cursor-not-allowed'
+                      }`}
+                    >
+                      {eligible ? 'Apply' : 'Locked'}
+                    </Button>
                   </div>
-                  <Button
-                    size="sm"
-                    onClick={() => setAppliedCoupons([...appliedCoupons, offer.game])}
-                    className="bg-gradient-gold text-game-purple font-bold hover:opacity-90 px-4 py-2 text-xs"
-                  >
-                    Apply
-                  </Button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
           
           {/* Applied Coupons Section */}

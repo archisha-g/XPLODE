@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
-type Screen = 'splash' | 'onboarding' | 'signup' | 'dashboard' | 'profile' | 'addCash' | 'quests' | 'leaderboard' | 'search' | 'tierDetails' | 'diwaliOffer' | 'heatStreak' | 'rewardChests';
+type Screen = 'splash' | 'onboarding' | 'signup' | 'dashboard' | 'profile' | 'addCash' | 'quests' | 'leaderboard' | 'search' | 'tierDetails' | 'diwaliOffer' | 'heatStreak' | 'rewardChests' | 'privateLobby' | 'privateGame';
 
 interface NavigationContextType {
   currentScreen: Screen;

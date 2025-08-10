@@ -198,6 +198,16 @@
     50% { box-shadow: var(--shadow-premium), var(--glow-gold); }
   }
   
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  
+  @keyframes fade-in {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
   .animate-glow {
     animation: var(--animation-glow);
   }
@@ -236,6 +246,14 @@
   
   .animate-premium-glow {
     animation: premium-glow 3s ease-in-out infinite;
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+  
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
   }
   
   /* Safe area utilities */
