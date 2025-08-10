@@ -138,6 +138,16 @@
     @apply bg-mobile-frame text-foreground overflow-hidden;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
+
+  /* Hide scrollbars globally */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+
+  *::-webkit-scrollbar {
+    display: none; /* WebKit */
+  }
   
   /* Mobile frame simulation */
   .mobile-frame {
@@ -146,20 +156,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 3rem 2rem;
+    padding: 3rem 1rem;
+    box-sizing: border-box;
   }
-  
+
   .mobile-screen {
-    width: 375px;
-    height: 812px;
+    width: 420px;
+    height: 900px;
     background: var(--gradient-purple);
     border-radius: 2.5rem;
     overflow: hidden;
     position: relative;
-    box-shadow: 
-      0 0 0 8px #1a1a1a,
-      0 0 0 12px #333,
-      0 20px 60px rgba(0, 0, 0, 0.8);
+    box-shadow:
+      0 0 0 3px #2a2a2a,
+      0 0 0 6px #1a1a1a,
+      0 30px 100px rgba(0, 0, 0, 0.9),
+      0 15px 60px rgba(0, 0, 0, 0.7),
+      0 5px 20px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  /* Gradient utilities */
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
   }
   
   /* Gaming animations */
@@ -206,6 +226,44 @@
   @keyframes fade-in {
     0% { opacity: 0; transform: translateY(10px); }
     100% { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slide-up {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes bounce-in {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.05); }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes wiggle {
+    0%, 7% { transform: rotateZ(0); }
+    15% { transform: rotateZ(-15deg); }
+    20% { transform: rotateZ(10deg); }
+    25% { transform: rotateZ(-10deg); }
+    30% { transform: rotateZ(6deg); }
+    35% { transform: rotateZ(-4deg); }
+    40%, 100% { transform: rotateZ(0); }
+  }
+
+  @keyframes chest-shake {
+    0%, 100% { transform: translateX(0); }
+    10% { transform: translateX(-5px) rotate(-1deg); }
+    20% { transform: translateX(5px) rotate(1deg); }
+    30% { transform: translateX(-3px) rotate(-0.5deg); }
+    40% { transform: translateX(3px) rotate(0.5deg); }
+    50% { transform: translateX(-2px); }
+    60% { transform: translateX(2px); }
+  }
+
+  @keyframes reward-pop {
+    0% { transform: scale(0) rotate(0deg); opacity: 0; }
+    50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+    100% { transform: scale(1) rotate(360deg); opacity: 1; }
   }
   
   .animate-glow {
@@ -254,6 +312,45 @@
   
   .animate-fade-in {
     animation: fade-in 0.5s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.4s ease-out;
+  }
+
+  .animate-bounce-in {
+    animation: bounce-in 0.6s ease-out;
+  }
+
+  .animate-wiggle {
+    animation: wiggle 2s ease-in-out;
+  }
+
+  .animate-chest-shake {
+    animation: chest-shake 0.8s ease-in-out;
+  }
+
+  .animate-reward-pop {
+    animation: reward-pop 0.6s ease-out;
+  }
+
+  /* Hover effects */
+  .hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .hover-glow {
+    transition: all 0.3s ease;
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    transform: scale(1.02);
   }
   
   /* Safe area utilities */

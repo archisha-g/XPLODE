@@ -8,12 +8,20 @@ import RealTimeClock from './RealTimeClock';
 const HeatStreakScreen = () => {
   const { navigateBack } = useNavigation();
   const [freezeTokens, setFreezeTokens] = useState(2);
-  
+  const [showFreezeModal, setShowFreezeModal] = useState(false);
+
   const currentStreak = 7;
+  const isPlatinum = true; // User's VIP status
   const nextMilestone = 15;
   const progressToNext = (currentStreak / nextMilestone) * 100;
-  
-  const streakMilestones = [
+
+  // Platinum players get rewards faster
+  const streakMilestones = isPlatinum ? [
+    { days: 2, reward: '100 XP + 1 Gacha Token', claimed: true, platinumBonus: true },
+    { days: 5, reward: '300 XP + Flame Trail', claimed: true, platinumBonus: true },
+    { days: 12, reward: '500 XP + Rare Cosmetic', claimed: false, platinumBonus: true },
+    { days: 25, reward: '1000 XP + Legendary Badge', claimed: false, platinumBonus: true }
+  ] : [
     { days: 3, reward: '100 XP + 1 Gacha Token', claimed: true },
     { days: 7, reward: '300 XP + Flame Trail', claimed: true },
     { days: 15, reward: '500 XP + Rare Cosmetic', claimed: false },

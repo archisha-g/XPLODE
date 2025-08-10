@@ -47,16 +47,24 @@ const ProfileModal = ({ isOpen, onClose }: ProfileModalProps) => {
   };
 
   return (
-    <div className="h-full w-full bg-gradient-to-br from-gold-light via-warning to-gold flex flex-col overflow-hidden relative">
+    <div className="h-full w-full bg-gradient-to-br from-emerald-600 via-cyan-500 to-teal-700 flex flex-col overflow-hidden relative">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-16 left-8 text-6xl opacity-10 animate-float">🐉</div>
+        <div className="absolute bottom-32 right-12 text-4xl opacity-15 animate-pulse">⚡</div>
+        <div className="absolute top-24 right-16 text-3xl opacity-10 animate-bounce" style={{animationDelay: '0.5s'}}>✨</div>
+        <div className="absolute bottom-48 left-12 text-4xl opacity-15 animate-pulse" style={{animationDelay: '1s'}}>⭐</div>
+      </div>
+
       {/* Status bar */}
-      <div className="flex justify-between items-center px-6 py-4 text-game-purple text-sm font-medium">
+      <div className="flex justify-between items-center px-6 py-4 text-white text-sm font-medium relative z-10">
         <RealTimeClock />
         <div className="flex items-center space-x-1">
           <div className="flex space-x-1">
-            <div className="w-1 h-3 bg-game-purple rounded"></div>
-            <div className="w-1 h-3 bg-game-purple rounded"></div>
-            <div className="w-1 h-3 bg-game-purple/50 rounded"></div>
-            <div className="w-1 h-3 bg-game-purple/50 rounded"></div>
+            <div className="w-1 h-3 bg-white rounded"></div>
+            <div className="w-1 h-3 bg-white rounded"></div>
+            <div className="w-1 h-3 bg-white/50 rounded"></div>
+            <div className="w-1 h-3 bg-white/50 rounded"></div>
           </div>
           <span className="ml-2">📶</span>
           <span>65</span>
@@ -64,25 +72,33 @@ const ProfileModal = ({ isOpen, onClose }: ProfileModalProps) => {
       </div>
 
       {/* Header */}
-      <div className="flex items-center justify-between p-6 pb-4">
+      <div className="flex items-center justify-between p-6 pb-4 relative z-10">
         <div className="flex items-center space-x-3">
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="text-game-purple hover:bg-game-purple/20"
+            className="text-white hover:bg-white/20 backdrop-blur-sm"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
-          <h2 className="text-xl font-bold text-game-purple">My profile</h2>
+          <h2 className="text-xl font-bold text-white">My Profile</h2>
         </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="ghost" size="icon" className="text-game-purple hover:bg-game-purple/20">
-              <Edit className="w-5 h-5" />
-            </Button>
-            <Button variant="ghost" size="icon" className="text-game-purple hover:bg-game-purple/20">
-              <Settings className="w-5 h-5" />
-            </Button>
+        <div className="flex items-center space-x-2">
+          <Button variant="ghost" size="icon" className="text-white hover:bg-white/20 backdrop-blur-sm">
+            <Edit className="w-5 h-5" />
+          </Button>
+          <Button variant="ghost" size="icon" className="text-white hover:bg-white/20 backdrop-blur-sm">
+            <Settings className="w-5 h-5" />
+          </Button>
+        </div>
+      </div>
+
+        {/* Shoutout Banner - For top players */}
+        <div className="px-6 pb-4">
+          <div className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-2xl p-4 text-center border-2 border-gold animate-pulse-gold">
+            <div className="text-white font-bold text-sm mb-1">🏆 FEATURED PLAYER 🏆</div>
+            <div className="text-white/90 text-xs">Top performer this week! Congratulations!</div>
           </div>
         </div>
 
@@ -90,11 +106,20 @@ const ProfileModal = ({ isOpen, onClose }: ProfileModalProps) => {
         <div className="px-6 pb-4">
           <div className="bg-gradient-to-r from-game-purple to-game-purple-dark rounded-2xl p-4 text-center">
             <div className="flex justify-center mb-3">
-              <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-gold">
+              <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-gold relative">
                 <img src={winnerAvatar} alt="Profile" className="w-full h-full object-cover" />
+                {/* Platinum badge */}
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-xs">
+                  👑
+                </div>
               </div>
             </div>
-            <div className="text-foreground font-bold text-lg mb-1">Joined: 08.08.25</div>
+            <div className="flex items-center justify-center space-x-2 mb-1">
+              <div className="text-foreground font-bold text-lg">Joined: 08.08.25</div>
+              <div className="bg-gradient-to-r from-purple-400 to-pink-400 px-2 py-1 rounded-full text-white text-xs font-bold">
+                PLATINUM
+              </div>
+            </div>
             <div className="text-foreground/80 text-sm">789****180</div>
           </div>
         </div>

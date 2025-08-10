@@ -1,10 +1,10 @@
-import { ArrowLeft, CheckCircle, Circle } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Circle, BookOpen, Zap, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigation } from './NavigationProvider';
 import RealTimeClock from './RealTimeClock';
 
 const QuestsScreen = () => {
-  const { navigateBack } = useNavigation();
+  const { navigateBack, navigateTo } = useNavigation();
 
   const dailyQuests = [
     { id: 1, title: 'Play 3 games', reward: '50 XP', completed: true, progress: '3/3' },
@@ -51,7 +51,7 @@ const QuestsScreen = () => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-6 pb-6">
+      <div className="flex-1 overflow-y-auto px-6 pb-24 space-y-6">
         {/* Daily Quests */}
         <div className="mb-8">
           <h2 className="text-lg font-bold text-warning mb-4">Daily Quests</h2>
@@ -117,6 +117,71 @@ const QuestsScreen = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Special Quest Categories */}
+        <div>
+          <h2 className="text-lg font-bold text-warning mb-4">🎯 Special Quests</h2>
+          <div className="grid grid-cols-1 gap-4">
+
+            {/* Lesson Streak */}
+            <div
+              onClick={() => navigateTo('lessonStreak')}
+              className="bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-xl p-4 border border-blue-400/30 cursor-pointer hover:bg-blue-500/30 transition-all duration-300"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <BookOpen className="w-8 h-8 text-blue-400" />
+                  <div>
+                    <div className="text-white font-bold">Learn & Win Streak</div>
+                    <div className="text-white/70 text-sm">Complete daily lessons for bonus XP</div>
+                    <div className="text-blue-300 text-xs mt-1">Current: 5 day streak</div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-blue-300 font-bold">+50 XP/day</div>
+                  <div className="text-xs text-white/60">Compounding</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Surprise Jackpot Info */}
+            <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-xl p-4 border border-yellow-400/30">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Zap className="w-8 h-8 text-yellow-400 animate-pulse" />
+                  <div>
+                    <div className="text-white font-bold">Surprise Jackpot</div>
+                    <div className="text-white/70 text-sm">Random games get reward multipliers</div>
+                    <div className="text-yellow-300 text-xs mt-1">Next jackpot: Any moment!</div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-yellow-300 font-bold">2-5X Rewards</div>
+                  <div className="text-xs text-white/60">Random</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Referral Chain */}
+            <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl p-4 border border-green-400/30">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Users className="w-8 h-8 text-green-400" />
+                  <div>
+                    <div className="text-white font-bold">Referral Chain</div>
+                    <div className="text-white/70 text-sm">Earn XP when friends achieve milestones</div>
+                    <div className="text-green-300 text-xs mt-1">Active referrals: 3 friends</div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-green-300 font-bold">Ongoing XP</div>
+                  <div className="text-xs text-white/60">Long-term</div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

@@ -38,18 +38,24 @@ const PrivateLobbyScreen = () => {
 
   const handleCreateGame = () => {
     if (selectedGame && selectedStake) {
+      // Store the selected game and stake in localStorage for the private game screen
+      localStorage.setItem('privateGameData', JSON.stringify({
+        game: selectedGame,
+        stake: selectedStake,
+        gameDetails: games.find(g => g.id === selectedGame)
+      }));
       navigateTo('privateGame');
     }
   };
 
   return (
-    <div className="h-full w-full bg-gradient-purple flex flex-col">
+    <div className="h-full w-full bg-gradient-purple flex flex-col overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 bg-game-purple-dark/30">
-        <button onClick={navigateBack} className="p-2">
+      <div className="flex items-center justify-between px-6 py-4 bg-game-purple-dark/80 backdrop-blur-sm border-b border-border">
+        <button onClick={navigateBack} className="p-2 hover:bg-white/10 rounded-lg transition-colors">
           <ArrowLeft className="w-6 h-6 text-foreground" />
         </button>
-        <h1 className="text-foreground font-bold text-lg">Winzo Private Games</h1>
+        <h1 className="text-foreground font-bold text-lg">WinZO Private Games</h1>
         <div className="w-10"></div>
       </div>
 
@@ -75,8 +81,8 @@ const PrivateLobbyScreen = () => {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 px-6 py-4 space-y-6">
-        <div className="bg-card/30 rounded-2xl p-6 border border-border">
+      <div className="flex-1 px-6 py-4 space-y-6 overflow-y-auto pb-24">
+        <div className="bg-game-purple-dark/60 backdrop-blur-sm rounded-2xl p-6 border border-border shadow-lg">
           <h2 className="text-gold font-bold text-xl mb-6">Create Private Game</h2>
           
           {/* Game Type Selection */}
@@ -87,9 +93,9 @@ const PrivateLobbyScreen = () => {
                 <SelectTrigger className="w-full bg-input border-border text-foreground">
                   <SelectValue placeholder="Select a game" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-game-purple-dark/95 backdrop-blur-md border-border">
                   {games.map((game) => (
-                    <SelectItem key={game.id} value={game.id}>
+                    <SelectItem key={game.id} value={game.id} className="text-foreground hover:bg-white/10">
                       {game.name}
                     </SelectItem>
                   ))}
@@ -104,9 +110,9 @@ const PrivateLobbyScreen = () => {
                 <SelectTrigger className="w-full bg-input border-border text-foreground">
                   <SelectValue placeholder="Choose stake amount" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-game-purple-dark/95 backdrop-blur-md border-border">
                   {stakes.map((stake) => (
-                    <SelectItem key={stake} value={stake}>
+                    <SelectItem key={stake} value={stake} className="text-foreground hover:bg-white/10">
                       {stake}
                     </SelectItem>
                   ))}

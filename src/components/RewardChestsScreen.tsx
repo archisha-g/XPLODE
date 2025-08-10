@@ -135,59 +135,80 @@ const RewardChestsScreen = () => {
         <h3 className="text-white font-bold text-lg mb-3">📦 Available Chests</h3>
         <div className="space-y-3">
           {availableChests.map((chest) => (
-            <div 
+            <div
               key={chest.id}
-              className={`bg-gradient-to-r ${chest.color} rounded-2xl p-4 shadow-glow-premium hover:scale-105 transition-all duration-300 animate-shimmer relative overflow-hidden`}
+              className={`bg-gradient-to-r ${chest.color} rounded-2xl p-4 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 relative overflow-hidden border border-white/10`}
             >
-              {/* Shimmer effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shine"></div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-3">
-                  <div className="text-3xl">{chest.icon}</div>
-                  <div>
-                    <h4 className="text-white font-bold">{chest.type}</h4>
-                    <p className="text-white/80 text-sm capitalize">{chest.rarity} Rarity</p>
+              {/* Shimmer effect - only when chest is ready */}
+              {chest.progress >= chest.maxProgress && (
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-pulse"></div>
+              )}
+
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="text-3xl drop-shadow-lg">{chest.icon}</div>
+                    <div>
+                      <h4 className="text-white font-bold text-lg">{chest.type}</h4>
+                      <p className="text-white/80 text-sm capitalize">{chest.rarity} Rarity</p>
+                    </div>
                   </div>
-                </div>
-                {chest.progress >= chest.maxProgress ? (
-                  <Button 
-                    onClick={() => handleOpenChest(chest.id)}
-                    className="bg-white text-game-purple hover:bg-white/90 font-bold animate-pulse-gold"
-                    disabled={openingChest}
-                  >
-                    {openingChest && selectedChest === chest.id ? (
-                      <span className="flex items-center space-x-1">
-                        <Sparkles className="w-4 h-4 animate-spin" />
-                        <span>Opening...</span>
-                      </span>
-                    ) : (
-                      'Open'
-                    )}
-                  </Button>
-                ) : (
-                  <span className="text-white/70 text-sm">Locked</span>
-                )}
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between text-white text-sm">
-                  <span>Progress</span>
-                  <span>{chest.progress}/{chest.maxProgress}</span>
-                </div>
-                <Progress value={(chest.progress / chest.maxProgress) * 100} className="h-2" />
-              </div>
-              
-              <div className="mt-3">
-                <p className="text-white/90 text-sm font-medium mb-1">Possible Rewards:</p>
-                <div className="flex flex-wrap gap-1">
-                  {chest.rewards.map((reward, idx) => (
-                    <span 
-                      key={idx}
-                      className="bg-black/30 text-white px-2 py-1 rounded text-xs"
+                  {chest.progress >= chest.maxProgress ? (
+                    <Button
+                      onClick={() => handleOpenChest(chest.id)}
+                      className="bg-white text-purple-900 hover:bg-white/90 font-bold px-6 py-2 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200"
+                      disabled={openingChest && selectedChest === chest.id}
                     >
-                      {reward}
-                    </span>
-                  ))}
+                      {openingChest && selectedChest === chest.id ? (
+                        <span className="flex items-center space-x-2">
+                          <Sparkles className="w-4 h-4 animate-spin" />
+                          <span>Opening...</span>
+                        </span>
+                      ) : (
+                        <span className="flex items-center space-x-1">
+                          <span>Open</span>
+                          <span className="text-lg">🎁</span>
+                        </span>
+                      )}
+                    </Button>
+                  ) : (
+                    <div className="flex flex-col items-end">
+                      <span className="text-white/70 text-sm font-medium">🔒 Locked</span>
+                      <span className="text-white/50 text-xs">{chest.maxProgress - chest.progress} XP needed</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-white text-sm font-medium">
+                      <span>Progress</span>
+                      <span>{chest.progress}/{chest.maxProgress} XP</span>
+                    </div>
+                    <div className="relative">
+                      <Progress
+                        value={(chest.progress / chest.maxProgress) * 100}
+                        className="h-3 bg-black/30 rounded-full overflow-hidden"
+                      />
+                      {chest.progress >= chest.maxProgress && (
+                        <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/20 to-orange-400/20 rounded-full animate-pulse"></div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-white/90 text-sm font-medium mb-2">🎁 Possible Rewards:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {chest.rewards.map((reward, idx) => (
+                        <span
+                          key={idx}
+                          className="bg-black/40 text-white px-3 py-1 rounded-lg text-xs font-medium border border-white/10 backdrop-blur-sm"
+                        >
+                          ✨ {reward}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -257,42 +278,105 @@ const RewardChestsScreen = () => {
         </div>
       </div>
 
-      {/* Opening Animation Overlay */}
+      {/* Enhanced Opening Animation Overlay */}
       {openingChest && (
-        <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 text-center animate-scale-in shadow-2xl">
-            <div className="text-6xl mb-4 animate-bounce">📦</div>
-            <div className="text-game-purple font-bold text-xl">Opening Chest...</div>
-            <div className="text-game-purple/70 text-sm">Revealing your rewards!</div>
-            <div className="flex justify-center mt-4 space-x-1">
-              <div className="w-2 h-2 bg-game-purple rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-game-purple rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-              <div className="w-2 h-2 bg-game-purple rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-purple-900/50 to-black/80 flex items-center justify-center z-50">
+          {/* Magical particles */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-2 h-2 bg-yellow-400 rounded-full animate-ping"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 2}s`,
+                  animationDuration: `${1 + Math.random()}s`
+                }}
+              />
+            ))}
+          </div>
+
+          <div className="bg-gradient-to-br from-purple-600 via-blue-600 to-purple-800 rounded-3xl p-10 text-center animate-scale-in shadow-2xl border-4 border-gold/50 relative overflow-hidden">
+            {/* Shimmer effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-pulse"></div>
+
+            <div className="relative z-10">
+              <div className="text-8xl mb-6 animate-bounce">📦</div>
+              <div className="text-white font-bold text-2xl mb-2 animate-pulse">Opening Chest...</div>
+              <div className="text-white/80 text-lg mb-6">✨ Revealing your magical rewards! ✨</div>
+
+              {/* Enhanced loading animation */}
+              <div className="flex justify-center items-center space-x-2">
+                {[...Array(5)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-3 h-3 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full animate-bounce"
+                    style={{animationDelay: `${i * 0.1}s`}}
+                  />
+                ))}
+              </div>
+
+              {/* Rotating gems */}
+              <div className="flex justify-center mt-4 space-x-4">
+                <div className="text-2xl animate-spin">💎</div>
+                <div className="text-2xl animate-spin" style={{animationDelay: '0.5s'}}>⭐</div>
+                <div className="text-2xl animate-spin" style={{animationDelay: '1s'}}>✨</div>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Rewards Display Overlay */}
+      {/* Enhanced Rewards Display Overlay */}
       {showRewards && (
-        <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50">
-          <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl p-8 text-center animate-scale-in shadow-2xl max-w-sm mx-4">
-            <div className="text-6xl mb-4 animate-bounce">🎉</div>
-            <div className="text-white font-bold text-2xl mb-2">Congratulations!</div>
-            <div className="text-white/90 text-sm mb-4">You earned these rewards:</div>
-            <div className="space-y-2">
-              {earnedRewards.map((reward, idx) => (
-                <div 
-                  key={idx} 
-                  className="bg-white/20 text-white px-3 py-2 rounded-lg font-medium animate-fade-in"
-                  style={{animationDelay: `${idx * 0.1}s`}}
-                >
-                  ✨ {reward}
-                </div>
-              ))}
-            </div>
-            <div className="text-white/80 text-xs mt-4">
-              Rewards added to your account!
+        <div className="absolute inset-0 bg-gradient-to-br from-black/90 via-purple-900/60 to-black/90 flex items-center justify-center z-50">
+          {/* Celebration particles */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {[...Array(30)].map((_, i) => (
+              <div
+                key={i}
+                className={`absolute text-2xl animate-bounce ${
+                  ['🎉', '✨', '🎊', '⭐', '💎'][Math.floor(Math.random() * 5)]
+                }`}
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 2}s`,
+                  animationDuration: `${1 + Math.random()}s`
+                }}
+              >
+                {['🎉', '✨', '🎊', '⭐', '💎'][Math.floor(Math.random() * 5)]}
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 rounded-3xl p-10 text-center animate-scale-in shadow-2xl max-w-sm mx-4 border-4 border-white/30 relative overflow-hidden">
+            {/* Celebration shimmer */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 animate-pulse"></div>
+
+            <div className="relative z-10">
+              <div className="text-8xl mb-6 animate-bounce">🎉</div>
+              <div className="text-white font-bold text-3xl mb-3 drop-shadow-lg">Congratulations!</div>
+              <div className="text-white/90 text-lg mb-6 font-medium">🎁 You earned these amazing rewards! 🎁</div>
+              <div className="space-y-3">
+                {earnedRewards.map((reward, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-gradient-to-r from-white/30 to-white/20 text-white px-4 py-3 rounded-xl font-bold animate-bounce-in border-2 border-white/20 shadow-lg"
+                    style={{animationDelay: `${idx * 0.2}s`}}
+                  >
+                    <span className="text-yellow-200 text-lg mr-2">🎁</span>
+                    {reward}
+                    <span className="text-yellow-200 text-lg ml-2">✨</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-6 p-3 bg-white/10 rounded-xl border border-white/20">
+                <div className="text-white font-bold text-sm mb-1">🎊 Success! 🎊</div>
+                <div className="text-white/80 text-xs">All rewards have been added to your account!</div>
+              </div>
             </div>
           </div>
         </div>

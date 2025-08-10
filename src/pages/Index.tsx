@@ -14,6 +14,8 @@ import HeatStreakScreen from '@/components/HeatStreakScreen';
 import RewardChestsScreen from '@/components/RewardChestsScreen';
 import PrivateLobbyScreen from '@/components/PrivateLobbyScreen';
 import PrivateGameScreen from '@/components/PrivateGameScreen';
+import LossbackCampaignScreen from '@/components/LossbackCampaignScreen';
+import LessonStreakScreen from '@/components/LessonStreakScreen';
 import { NavigationProvider, useNavigation } from '@/components/NavigationProvider';
 
 const AppContent = () => {
@@ -67,6 +69,10 @@ const AppContent = () => {
         return <PrivateLobbyScreen />;
       case 'privateGame':
         return <PrivateGameScreen />;
+      case 'lossbackCampaign':
+        return <LossbackCampaignScreen />;
+      case 'lessonStreak':
+        return <LessonStreakScreen />;
       default:
         return <SplashScreen onComplete={handleSplashComplete} />;
     }
