@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Search, Bell, Menu, Gift, Trophy, Star, Wallet, Flame, Package, Home, RotateCcw, DollarSign, Zap, BookOpen, Users, Calendar } from 'lucide-react';
+import { Search, Bell, Gift, Trophy, Flame } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CelebrationModal from './CelebrationModal';
 import NotificationModal from './NotificationModal';
-import SurpriseJackpotModal from './SurpriseJackpotModal';
-import { useNavigation } from './NavigationProvider';
 import RealTimeClock from './RealTimeClock';
+
+import { useNavigation } from './NavigationProvider';
+
 
 // Import game images
 import callbreakImg from '@/assets/callbreak.jpg';
@@ -23,44 +24,16 @@ const MainDashboard = () => {
   const [showCelebration, setShowCelebration] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [showJackpot, setShowJackpot] = useState(false);
-  const [jackpotGame, setJackpotGame] = useState('');
-  const [jackpotMultiplier, setJackpotMultiplier] = useState(2);
-  const [showFeaturesMenu, setShowFeaturesMenu] = useState(false);
+
+
   const { navigateTo } = useNavigation();
 
-  const handleFeaturesMenuClick = () => {
-    setShowFeaturesMenu(!showFeaturesMenu);
-  };
 
-  const handleFeatureSelect = (feature: string) => {
-    setShowFeaturesMenu(false);
-    switch (feature) {
-      case 'jackpot':
-        setJackpotGame('Poker');
-        setJackpotMultiplier(3);
-        setShowJackpot(true);
-        break;
-      case 'lessonStreak':
-        navigateTo('lessonStreak');
-        break;
-      case 'lossback':
-        navigateTo('lossbackCampaign');
-        break;
-      default:
-        break;
-    }
-  };
+
+
 
   useEffect(() => {
-    // Check if user just signed in from localStorage or context
-    const userSignedIn = localStorage.getItem('userSignedIn');
-    if (userSignedIn && !isSignedIn) {
-      setIsSignedIn(true);
-      setShowCelebration(true);
-      // Clear the flag so celebration doesn't show again
-      localStorage.removeItem('userSignedIn');
-    }
+    // Remove sign-in popup functionality
   }, [isSignedIn]);
 
   const gameCategories = [
@@ -106,80 +79,92 @@ const MainDashboard = () => {
         isOpen={showNotifications} 
         onClose={() => setShowNotifications(false)} 
       />
-      {/* Status bar */}
-      <div className="flex justify-between items-center px-6 py-4 text-foreground text-sm font-medium">
+      {/* Status bar - WinZO Style with Real Time */}
+      <div className="flex items-center justify-between px-4 py-2 text-white text-sm">
         <RealTimeClock />
         <div className="flex items-center space-x-1">
           <div className="flex space-x-1">
-            <div className="w-1 h-3 bg-foreground rounded"></div>
-            <div className="w-1 h-3 bg-foreground rounded"></div>
-            <div className="w-1 h-3 bg-muted rounded"></div>
-            <div className="w-1 h-3 bg-muted rounded"></div>
+            <div className="w-1 h-3 bg-white rounded"></div>
+            <div className="w-1 h-3 bg-white rounded"></div>
+            <div className="w-1 h-3 bg-white/50 rounded"></div>
           </div>
-          <span className="ml-2">📶</span>
-          <span>65</span>
+          <span className="ml-1">📶</span>
+          <div className="bg-green-500 px-1 rounded text-xs font-bold">51</div>
         </div>
       </div>
 
-      {/* Top bar */}
-      <div className="flex items-center justify-between px-6 py-3 bg-game-purple-dark/30">
-        <div className="flex items-center space-x-3">
+      {/* Header with Profile and Balance - Professional Aligned Style */}
+      <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center space-x-2">
+          {/* Profile Button */}
           <button
             onClick={() => navigateTo('profile')}
-            className="w-10 h-10 rounded-full bg-gradient-gold flex items-center justify-center hover-lift hover-glow transition-all duration-300 animate-bounce-in"
+            className="w-10 h-10 rounded-full overflow-hidden border-2 border-yellow-400 shadow-md hover:shadow-yellow-400/50 transition-all duration-300 hover:scale-105"
           >
-            <span className="text-game-purple font-bold">👤</span>
-          </button>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <div className="flex items-center space-x-1 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg px-2 py-1 border border-gold/30 hover-lift animate-slide-up">
-            <Star className="w-3 h-3 text-gold animate-pulse" />
-            <span className="text-foreground font-medium text-sm">12k</span>
-          </div>
-
-          <button
-            onClick={() => navigateTo('addCash')}
-            className="flex items-center space-x-1 bg-secondary/30 rounded-lg px-2 py-1 border border-warning hover-lift hover-glow transition-all duration-300 animate-slide-up"
-            style={{animationDelay: '0.1s'}}
-          >
-            <Wallet className="w-3 h-3 text-warning" />
-            <span className="text-foreground font-medium text-sm">₹20</span>
-          </button>
-
-          <button
-            onClick={() => setShowNotifications(true)}
-            className="relative hover-lift transition-all duration-300 p-1 animate-slide-up"
-            style={{animationDelay: '0.2s'}}
-          >
-            <Bell className="w-5 h-5 text-foreground" />
-            <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-warning rounded-full flex items-center justify-center animate-pulse">
-              <span className="text-game-purple text-xs font-bold">3</span>
+            <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+              <span className="text-white font-bold text-sm">👤</span>
             </div>
           </button>
 
-          <div className="w-7 h-7 rounded-full bg-gradient-gold flex items-center justify-center hover-lift animate-slide-up" style={{animationDelay: '0.3s'}}>
-            <span className="text-game-purple text-xs">🎯</span>
+          {/* Diamonds */}
+          <div className="flex items-center space-x-1 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg px-2 py-1 shadow-md border border-blue-400/30 h-10">
+            <span className="text-white text-lg">💎</span>
+            <span className="text-white font-bold text-sm">0</span>
+          </div>
+
+          {/* Heat Streak Button */}
+          <button
+            onClick={() => navigateTo('heatStreak')}
+            className="flex items-center space-x-1 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg px-2 py-1 shadow-md border border-orange-400/30 hover:shadow-orange-400/50 transition-all duration-300 hover:scale-105 h-10"
+          >
+            <Flame className="w-3 h-3 text-white" />
+            <span className="text-white font-bold text-xs">STREAK</span>
+          </button>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          {/* Cash Balance */}
+          <button
+            onClick={() => navigateTo('addCash')}
+            className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg px-3 py-2 border-2 border-yellow-500 shadow-md hover:shadow-yellow-500/50 transition-all duration-300 hover:scale-105 h-10"
+          >
+            <div className="flex items-center space-x-1">
+              <span className="text-yellow-400 text-sm font-bold">₹</span>
+              <span className="text-white font-bold text-sm">20</span>
+            </div>
+          </button>
+
+          {/* Notifications */}
+          <button
+            onClick={() => setShowNotifications(true)}
+            className="text-white p-2 bg-gray-800/50 rounded-lg hover:bg-gray-700/50 transition-all duration-300 hover:scale-105 w-10 h-10 flex items-center justify-center"
+          >
+            <Bell className="w-4 h-4" />
+          </button>
+
+          {/* Target/Achievement */}
+          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-red-500 to-yellow-500 flex items-center justify-center shadow-md hover:shadow-red-400/50 transition-all duration-300 hover:scale-105">
+            <span className="text-white text-sm">🎯</span>
           </div>
         </div>
       </div>
 
-      {/* Navigation tabs */}
-      <div className="flex px-6 py-2 space-x-4">
-        {['WINZOMANIA', 'DIWALI OFFER', 'PRIVATE LOBBY'].map((tab) => (
+      {/* Navigation tabs - WinZO Style */}
+      <div className="flex px-4 py-3 space-x-2">
+        {['WINZOMANIA', 'WORLD WAR', 'TOURNAMENT'].map((tab, index) => (
           <button
             key={tab}
             onClick={() => {
-              if (tab === 'PRIVATE LOBBY') {
-                navigateTo('privateLobby');
+              if (tab === 'TOURNAMENT') {
+                navigateTo('tournament');
               } else {
                 setActiveTab(tab);
               }
             }}
-            className={`text-xs font-bold py-2 px-1 border-b-2 transition-colors ${
-              activeTab === tab
-                ? 'text-warning border-warning'
-                : 'text-foreground/70 border-transparent hover:text-foreground'
+            className={`px-4 py-2 text-sm font-bold transition-all duration-300 rounded-lg ${
+              (index === 0 && activeTab === 'WINZOMANIA') || tab === 'TOURNAMENT'
+                ? 'text-yellow-400 bg-yellow-400/10 border border-yellow-400/30'
+                : 'text-white/70 hover:text-white hover:bg-white/10'
             }`}
           >
             {tab}
@@ -187,245 +172,220 @@ const MainDashboard = () => {
         ))}
       </div>
 
-      {/* Quick actions */}
-      <div className="flex items-center justify-between px-6 py-3 bg-secondary/20">
-        <div className="flex items-center space-x-4">
+      {/* Action Bar - Professional Proportionate Style */}
+      <div className="flex items-center justify-center px-3 py-3 bg-gradient-to-r from-black/30 to-gray-900/30 backdrop-blur-sm">
+        <div className="flex items-center justify-between w-full max-w-sm bg-gray-800/80 rounded-xl p-2 shadow-xl border border-gray-600/50">
           <button
             onClick={() => navigateTo('quests')}
-            className="flex items-center space-x-1 hover-lift transition-all duration-300 animate-slide-up"
+            className="flex flex-col items-center justify-center flex-1 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-lg py-2 px-2 border border-yellow-500/30 hover:bg-yellow-500/30 transition-all duration-300 hover:scale-105"
           >
-            <Gift className="w-4 h-4 text-warning animate-pulse" />
-            <span className="text-foreground text-xs font-medium">QUESTS</span>
+            <Gift className="w-4 h-4 text-yellow-400 mb-1" />
+            <span className="text-white text-xs font-bold">BENEFITS</span>
           </button>
 
           <button
             onClick={() => navigateTo('search')}
-            className="flex items-center space-x-1 hover-lift transition-all duration-300 animate-slide-up"
-            style={{animationDelay: '0.1s'}}
+            className="flex flex-col items-center justify-center flex-1 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-lg py-2 px-2 mx-1 border border-blue-500/30 hover:bg-blue-500/30 transition-all duration-300 hover:scale-105"
           >
-            <Search className="w-4 h-4 text-foreground" />
-            <span className="text-foreground text-xs font-medium">SEARCH</span>
+            <Search className="w-4 h-4 text-blue-400 mb-1" />
+            <span className="text-white text-xs font-bold">SEARCH</span>
           </button>
 
           <button
             onClick={() => navigateTo('leaderboard')}
-            className="flex items-center space-x-1 hover-lift transition-all duration-300 animate-slide-up"
-            style={{animationDelay: '0.2s'}}
+            className="flex flex-col items-center justify-center flex-1 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-lg py-2 px-2 border border-green-500/30 hover:bg-green-500/30 transition-all duration-300 hover:scale-105"
           >
-            <Trophy className="w-4 h-4 text-foreground" />
-            <span className="text-foreground text-xs font-medium">LEADERS</span>
+            <Trophy className="w-4 h-4 text-green-400 mb-1" />
+            <span className="text-white text-xs font-bold">LEADERBOARD</span>
           </button>
         </div>
-        
-        <div className="flex items-center space-x-2">
-          <Menu className="w-5 h-5 text-foreground" />
-          <div className="w-6 h-6 rounded-full bg-gold flex items-center justify-center">
-            <span className="text-game-purple text-xs font-bold">i</span>
+      </div>
+
+      {/* Main content - WinZO Style */}
+      <div className="flex-1 overflow-y-auto px-4 py-2 space-y-6 pb-28">
+        {/* TRENDING Section */}
+        <div className="space-y-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg">
+              <Flame className="w-5 h-5 text-white" />
+            </div>
+            <h3 className="text-white font-bold text-xl tracking-wide">TRENDING</h3>
+          </div>
+
+          <div className="flex space-x-4 overflow-x-auto pb-2">
+            {[
+              { name: 'CALLBREAK', color: 'border-green-400', bg: 'from-green-600 to-green-800', image: callbreakImg },
+              { name: 'RUMMY', color: 'border-yellow-400', bg: 'from-yellow-600 to-orange-600', image: rummyImg },
+              { name: 'SOLITAIRE', color: 'border-purple-400', bg: 'from-purple-600 to-pink-600', image: solitaireImg }
+            ].map((game, index) => (
+              <div
+                key={index}
+                className={`min-w-[140px] aspect-[4/3] bg-gradient-to-br ${game.bg} rounded-3xl border-3 ${game.color} overflow-hidden cursor-pointer hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-${game.color.split('-')[1]}-400/50 relative group`}
+              >
+                <div className="absolute inset-0">
+                  <img
+                    src={game.image}
+                    alt={game.name}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+                </div>
+
+                <div className="relative h-full flex flex-col justify-between p-4">
+                  <div className="text-white font-bold text-sm drop-shadow-lg">{game.name}</div>
+                  <div className="text-white/90 text-xs bg-black/30 rounded-full px-3 py-1 backdrop-blur-sm">Play Now</div>
+                </div>
+
+                {/* Shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* FOR YOU Section */}
+        <div className="space-y-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
+              <span className="text-white text-lg">⭐</span>
+            </div>
+            <h3 className="text-white font-bold text-xl tracking-wide">FOR YOU</h3>
+          </div>
+
+          <div className="flex space-x-4 overflow-x-auto pb-2">
+            {[
+              { name: 'SNAKES & LADDERS', color: 'border-blue-400', bg: 'from-blue-600 to-cyan-600', image: snakesLaddersImg },
+              { name: 'WORLD WAR', color: 'border-red-400', bg: 'from-red-600 to-orange-600', image: worldWarImg },
+              { name: 'LIQO', color: 'border-indigo-400', bg: 'from-indigo-600 to-purple-600', image: liquidWarsImg }
+            ].map((game, index) => (
+              <div
+                key={index}
+                className={`min-w-[140px] aspect-[4/3] bg-gradient-to-br ${game.bg} rounded-3xl border-3 ${game.color} overflow-hidden cursor-pointer hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-${game.color.split('-')[1]}-400/50 relative group`}
+              >
+                <div className="absolute inset-0">
+                  <img
+                    src={game.image}
+                    alt={game.name}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+                </div>
+
+                <div className="relative h-full flex flex-col justify-between p-4">
+                  <div className="text-white font-bold text-sm drop-shadow-lg">{game.name}</div>
+                  <div className="text-white/90 text-xs bg-black/30 rounded-full px-3 py-1 backdrop-blur-sm">Play Now</div>
+                </div>
+
+                {/* Shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* POPULAR ON WINZO Section */}
+        <div className="space-y-4">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
+              <span className="text-white text-lg">⭐</span>
+            </div>
+            <h3 className="text-white font-bold text-xl tracking-wide">POPULAR ON WINZO</h3>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            {[
+              { name: 'POKER', color: 'border-red-400', bg: 'from-red-600 to-pink-600', number: '1', image: pokerImg },
+              { name: 'LUDO', color: 'border-pink-400', bg: 'from-pink-600 to-purple-600', number: '2', image: ludoImg },
+              { name: 'SNAKES & LADDERS', color: 'border-cyan-400', bg: 'from-cyan-600 to-blue-600', number: '3', image: snakesLaddersImg },
+              { name: 'CARROM', color: 'border-yellow-400', bg: 'from-yellow-600 to-orange-600', number: '4', image: carromImg }
+            ].map((game, index) => (
+              <div
+                key={index}
+                className={`aspect-[4/3] bg-gradient-to-br ${game.bg} rounded-3xl border-3 ${game.color} overflow-hidden cursor-pointer hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-${game.color.split('-')[1]}-400/50 relative group`}
+              >
+                <div className="absolute inset-0">
+                  <img
+                    src={game.image}
+                    alt={game.name}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+                </div>
+
+                <div className="absolute top-3 left-3 w-8 h-8 bg-gradient-to-r from-white to-gray-200 rounded-full flex items-center justify-center shadow-lg border-2 border-yellow-400">
+                  <span className="text-black font-bold text-sm">{game.number}</span>
+                </div>
+
+                <div className="relative h-full flex flex-col justify-end p-4">
+                  <div className="text-white font-bold text-sm drop-shadow-lg">{game.name}</div>
+                  <div className="text-white/90 text-xs bg-black/30 rounded-full px-3 py-1 backdrop-blur-sm">Play Now</div>
+                </div>
+
+                {/* Shine effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Main content */}
-      <div className="flex-1 overflow-y-auto px-6 py-2 space-y-4 pb-28">
-        {activeTab === 'DIWALI OFFER' ? (
-          <div className="relative min-h-64 bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 rounded-2xl p-6 overflow-hidden">
-            {/* Floating emojis in background */}
-            <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-4 left-8 text-2xl animate-float">🪔</div>
-              <div className="absolute top-16 right-12 text-xl animate-bounce" style={{animationDelay: '0.5s'}}>✨</div>
-              <div className="absolute bottom-16 left-12 text-2xl animate-pulse" style={{animationDelay: '1s'}}>🎆</div>
-              <div className="absolute bottom-8 right-8 text-xl animate-float" style={{animationDelay: '1.5s'}}>🎯</div>
-            </div>
-            
-            <div className="relative z-10 text-center py-8">
-              <h2 className="text-white text-2xl font-bold mb-4">🪔 Diwali Special 🎆</h2>
-              <p className="text-white/80 mb-6">Celebrate with amazing offers and rewards!</p>
-              <Button 
-                onClick={() => navigateTo('diwaliOffer')}
-                className="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-400 hover:to-orange-500 text-white font-bold py-4 px-8 rounded-2xl shadow-glow-gold text-lg animate-pulse-gold"
-              >
-                🪔 Explore Diwali Offers 🎆
-              </Button>
-            </div>
-          </div>
-        ) : (
-          gameCategories.map((category, categoryIndex) => (
-          <div key={categoryIndex} className="space-y-3">
-            <div className="flex items-center space-x-2">
-              <span className="text-lg">{category.icon}</span>
-              <h3 className="text-foreground font-bold text-lg">{category.title}</h3>
-            </div>
-            
-            <div className="grid grid-cols-3 gap-3">
-              {category.games.map((game, gameIndex) => (
-                <div
-                  key={gameIndex}
-                  className="aspect-square bg-gradient-card rounded-2xl overflow-hidden shadow-lg cursor-pointer hover-lift hover-glow relative animate-slide-up group"
-                  style={{animationDelay: `${gameIndex * 0.1}s`}}
-                >
-                  <div className="absolute inset-0">
-                    <img
-                      src={game.image}
-                      alt={game.name}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent group-hover:from-black/40" />
-                  </div>
-
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                  <div className="absolute bottom-1 left-1 right-1">
-                    <div className="text-white text-xs font-bold text-center leading-tight bg-black/50 rounded px-1 py-0.5 group-hover:bg-purple-600/70 transition-colors duration-300">
-                      {game.name}
-                    </div>
-                  </div>
-
-                  {/* Play icon on hover */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center animate-bounce-in">
-                      <span className="text-purple-600 text-lg">▶️</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))
-        )}
-      </div>
-
-      {/* Promotional banner */}
-      <div className="px-6 py-1">
-        <div className="bg-gradient-to-r from-success to-success/80 rounded-lg p-2 flex items-center space-x-2">
-          <div className="w-6 h-6 rounded-full bg-success-foreground/20 flex items-center justify-center">
-            <span className="text-success-foreground text-xs">💰</span>
+      {/* Promotional banner - WinZO Callbreak Style */}
+      <div className="px-4 py-2">
+        <div className="bg-gradient-to-r from-orange-600 to-red-600 rounded-lg p-3 flex items-center space-x-3 border border-yellow-400">
+          <div className="w-10 h-10 rounded-lg bg-black/30 flex items-center justify-center">
+            <span className="text-white text-lg">🃏</span>
           </div>
           <div className="flex-1">
-            <div className="text-success-foreground font-bold text-xs">100% Bonus offer</div>
-            <div className="text-success-foreground/80 text-xs">Get 100% bonus upto ₹50</div>
+            <div className="text-white font-bold text-sm">₹2 Free Ticket of Callbreak</div>
+            <div className="text-white/90 text-xs">You can play ₹2 callbreak game for Free. Play Now</div>
           </div>
-          <Button size="sm" variant="ghost" className="text-success-foreground hover:bg-success-foreground/20 p-0.5 text-xs">
+          <Button size="sm" variant="ghost" className="text-white hover:bg-white/20 p-1 text-lg">
             ✕
           </Button>
         </div>
       </div>
 
-      {/* Bottom navigation - WinZO style - Fixed position */}
-      <div className="bottom-nav-fixed flex items-center justify-between px-4 py-3 bg-gradient-to-r from-game-purple-dark via-game-purple to-game-purple-dark backdrop-blur-md border-t-2 border-gold/30 shadow-lg rounded-t-2xl">
+      {/* WinZo Bounceback Button - Heart Only */}
+      <div className="fixed bottom-20 right-4 z-50">
+        <button
+          onClick={() => navigateTo('lossbackCampaign')}
+          className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-full w-12 h-12 shadow-lg hover:shadow-purple-400/50 transition-all duration-300 hover:scale-105 border border-purple-400/50 flex items-center justify-center"
+        >
+          <span className="text-white text-lg">💜</span>
+        </button>
+      </div>
+
+      {/* Bottom navigation - Professional equal-sized buttons */}
+      <div className="bottom-nav-fixed flex items-center justify-between px-4 py-3 bg-gradient-to-r from-gray-900 via-black to-gray-900 backdrop-blur-xl border-t border-gray-700/50 shadow-2xl">
         {[
-          { name: 'Heat Streak', icon: 'Streak', action: () => navigateTo('heatStreak'), color: 'text-orange-400' },
-          { name: 'Reward Chests', icon: 'Chests', action: () => navigateTo('rewardChests'), color: 'text-yellow-400' },
-          { name: 'Home', icon: 'Home', isActive: true, color: 'text-white' },
-          { name: 'Features', icon: 'Features', action: () => setShowFeaturesMenu(!showFeaturesMenu), color: 'text-purple-400' },
-          { name: 'Add Cash', icon: 'Wallet', action: () => navigateTo('addCash'), color: 'text-green-400' }
+          { name: 'Sladder', icon: '📊', action: () => navigateTo('leaderboard') },
+          { name: 'World War', icon: '⚔️', action: () => navigateTo('heatStreak') },
+          { name: 'Home', icon: '🏠', isCenter: true, action: () => {} },
+          { name: 'Refer', icon: '👥', action: () => navigateTo('profile') },
+          { name: 'Wallet', icon: '💰', action: () => navigateTo('addCash') }
         ].map((item, index) => (
           <button
             key={index}
             onClick={item.action}
-            className={`flex flex-col items-center space-y-1 flex-1 py-2 transition-all duration-300 hover:scale-110 hover:-translate-y-1 ${
-              item.isActive
-                ? 'bg-gradient-to-r from-gold to-yellow-400 rounded-2xl mx-2 p-3 shadow-lg animate-bounce-in'
-                : 'hover:bg-white/10 rounded-xl mx-1'
+            className={`flex flex-col items-center justify-center w-16 h-16 transition-all duration-300 ${
+              item.isCenter
+                ? 'bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full shadow-xl border-2 border-yellow-300 hover:shadow-yellow-400/50 hover:scale-105'
+                : 'hover:scale-105 hover:bg-gray-800/50 rounded-xl'
             }`}
           >
-            <div className={`transition-all duration-300 ${
-              item.isActive
-                ? 'text-game-purple animate-pulse'
-                : `${item.color} hover:scale-125`
-            }`}>
-              {item.icon === 'Streak' && <Flame className="w-5 h-5" />}
-              {item.icon === 'Chests' && <Package className="w-5 h-5" />}
-              {item.icon === 'Home' && <Home className="w-5 h-5" />}
-              {item.icon === 'Features' && <Menu className="w-5 h-5" />}
-              {item.icon === 'Wallet' && <DollarSign className="w-5 h-5" />}
+            <div className={`text-xl transition-all duration-300 ${item.isCenter ? 'text-white' : 'text-white/90 hover:text-white'}`}>
+              {item.icon}
             </div>
-            <span className={`text-xs font-medium transition-all duration-300 ${
-              item.isActive
-                ? 'text-game-purple font-bold'
-                : 'text-white/80 hover:text-white'
-            }`}>
+            <span className={`text-xs font-medium mt-1 ${item.isCenter ? 'text-white' : 'text-white/70'}`}>
               {item.name}
             </span>
           </button>
         ))}
       </div>
 
-      {/* Features Drop-up Menu */}
-      {showFeaturesMenu && (
-        <div className="fixed bottom-20 left-1/2 transform -translate-x-1/2 w-[390px] bg-game-purple-dark/95 backdrop-blur-md rounded-2xl border-2 border-gold/30 z-[110] shadow-2xl animate-slide-up">
-          <div className="p-4">
-            <h3 className="text-white font-bold text-lg mb-4 text-center">🎯 Special Features</h3>
-            <div className="space-y-3">
 
-              {/* Surprise Jackpot */}
-              <button
-                onClick={() => handleFeatureSelect('jackpot')}
-                className="w-full bg-gradient-to-r from-yellow-500/20 to-orange-500/20 rounded-xl p-4 border border-yellow-400/30 hover:bg-yellow-500/30 transition-all duration-300 text-left"
-              >
-                <div className="flex items-center space-x-3">
-                  <Zap className="w-6 h-6 text-yellow-400 animate-pulse" />
-                  <div>
-                    <div className="text-white font-bold">Surprise Jackpot</div>
-                    <div className="text-white/70 text-sm">Random reward multipliers</div>
-                  </div>
-                </div>
-              </button>
 
-              {/* Lesson Streak */}
-              <button
-                onClick={() => handleFeatureSelect('lessonStreak')}
-                className="w-full bg-gradient-to-r from-blue-500/20 to-indigo-500/20 rounded-xl p-4 border border-blue-400/30 hover:bg-blue-500/30 transition-all duration-300 text-left"
-              >
-                <div className="flex items-center space-x-3">
-                  <BookOpen className="w-6 h-6 text-blue-400" />
-                  <div>
-                    <div className="text-white font-bold">Learn & Win</div>
-                    <div className="text-white/70 text-sm">Daily strategy lessons</div>
-                  </div>
-                </div>
-              </button>
 
-              {/* Lossback Campaign */}
-              <button
-                onClick={() => handleFeatureSelect('lossback')}
-                className="w-full bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-xl p-4 border border-red-400/30 hover:bg-red-500/30 transition-all duration-300 text-left"
-              >
-                <div className="flex items-center space-x-3">
-                  <RotateCcw className="w-6 h-6 text-red-400" />
-                  <div>
-                    <div className="text-white font-bold">Lossback Campaign</div>
-                    <div className="text-white/70 text-sm">Get rewards for losses</div>
-                  </div>
-                </div>
-              </button>
-
-              {/* Referral Chains */}
-              <button
-                onClick={() => setShowFeaturesMenu(false)}
-                className="w-full bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl p-4 border border-green-400/30 hover:bg-green-500/30 transition-all duration-300 text-left"
-              >
-                <div className="flex items-center space-x-3">
-                  <Users className="w-6 h-6 text-green-400" />
-                  <div>
-                    <div className="text-white font-bold">Referral Chains</div>
-                    <div className="text-white/70 text-sm">Long-term friend rewards</div>
-                  </div>
-                </div>
-              </button>
-
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Surprise Jackpot Modal */}
-      <SurpriseJackpotModal
-        isOpen={showJackpot}
-        onClose={() => setShowJackpot(false)}
-        gameType={jackpotGame}
-        multiplier={jackpotMultiplier}
-      />
     </div>
   );
 };

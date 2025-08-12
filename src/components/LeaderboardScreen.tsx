@@ -7,14 +7,14 @@ const LeaderboardScreen = () => {
   const { navigateBack } = useNavigation();
 
   const leaderboardData = [
-    { rank: 1, name: 'Niraj Sharma', tier: 'Platinum', xp: 25000, avatar: '👑' },
-    { rank: 2, name: 'Priya Singh', tier: 'Platinum', xp: 24500, avatar: '🏆' },
-    { rank: 3, name: 'Rahul Kumar', tier: 'Gold', xp: 22000, avatar: '🥉' },
-    { rank: 4, name: 'Anjali Gupta', tier: 'Gold', xp: 20500, avatar: '⭐' },
-    { rank: 5, name: 'Vikash Yadav', tier: 'Gold', xp: 19000, avatar: '🎯' },
-    { rank: 6, name: 'You', tier: 'Gold', xp: 12000, avatar: '👤', isCurrentUser: true },
-    { rank: 7, name: 'Mohit Jain', tier: 'Silver', xp: 11500, avatar: '🎮' },
-    { rank: 8, name: 'Sneha Patel', tier: 'Silver', xp: 10000, avatar: '💎' },
+    { rank: 1, name: 'Arjun Patel', tier: 'VIP 5', xp: 25000, avatar: '👑' },
+    { rank: 2, name: 'Priya Singh', tier: 'VIP 4', xp: 24500, avatar: '🏆' },
+    { rank: 3, name: 'Rahul Kumar', tier: 'VIP 4', xp: 22000, avatar: '🥉' },
+    { rank: 4, name: 'Anjali Gupta', tier: 'VIP 3', xp: 20500, avatar: '⭐' },
+    { rank: 5, name: 'Vikash Yadav', tier: 'VIP 3', xp: 19000, avatar: '🎯' },
+    { rank: 6, name: 'You', tier: 'VIP 3', xp: 12000, avatar: '👤', isCurrentUser: true },
+    { rank: 7, name: 'Mohit Jain', tier: 'VIP 2', xp: 11500, avatar: '🎮' },
+    { rank: 8, name: 'Sneha Patel', tier: 'VIP 2', xp: 10000, avatar: '💎' },
   ];
 
   const getTierColor = (tier: string) => {

@@ -1,10 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowLeft, Settings, Edit, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useNavigation } from './NavigationProvider';
 import RealTimeClock from './RealTimeClock';
 import winnerAvatar from '@/assets/winner-avatar.jpg';
+// Import all tier images
+import wolfImg from '../assets/wolf.png';
+import sharkImg from '../assets/shark.png';
+import lionImg from '../assets/lion.png';
+import phoenixImg from '../assets/phoenix.png';
+import unicornImg from '../assets/unicorn.png';
+import dragonImg from '../assets/dragon.png';
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -13,13 +20,59 @@ interface ProfileModalProps {
 
 const ProfileModal = ({ isOpen, onClose }: ProfileModalProps) => {
   const { navigateTo } = useNavigation();
+  const [winzoneLeft, setWinzoneLeft] = useState(2);
+  const [isActivated, setIsActivated] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(0); // in seconds
+  const [timerActive, setTimerActive] = useState(false);
+
+  // Timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (timerActive && timeRemaining > 0) {
+      interval = setInterval(() => {
+        setTimeRemaining(prev => {
+          if (prev <= 1) {
+            setTimerActive(false);
+            setIsActivated(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [timerActive, timeRemaining]);
+
+  // Format time remaining
+  const formatTime = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
   if (!isOpen) return null;
 
-  const currentVIPLevel = 'Dragon (VIP 6)';
-  const currentXP = 12000;
-  const nextLevelXP = 20000;
-  const progressPercentage = (currentXP / nextLevelXP) * 100;
+  const currentVIPLevel = 3;
+  const currentVIPPoints = 5000;
+  const nextLevelVIPPoints = 8000;
+  const progressPercentage = (currentVIPPoints / nextLevelVIPPoints) * 100;
+
+  const handleWinzoneActivation = () => {
+    if (winzoneLeft > 0) {
+      setWinzoneLeft(prev => prev - 1);
+      setIsActivated(true);
+      setTimeRemaining(6 * 60 * 60); // 6 hours in seconds
+      setTimerActive(true);
+
+      // Add golden shine effect
+      const button = document.querySelector('.winzone-button');
+      button?.classList.add('animate-pulse-gold');
+      setTimeout(() => {
+        button?.classList.remove('animate-pulse-gold');
+      }, 2000);
+    }
+  };
 
   const tierBenefits = {
     Gold: [
@@ -50,7 +103,19 @@ const ProfileModal = ({ isOpen, onClose }: ProfileModalProps) => {
     <div className="h-full w-full bg-gradient-to-br from-emerald-600 via-cyan-500 to-teal-700 flex flex-col overflow-hidden relative">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-16 left-8 text-6xl opacity-10 animate-float">🐉</div>
+        <div className="absolute top-16 left-8 w-20 h-20 opacity-10 animate-float">
+          <img
+            src={dragonImg}
+            alt="Dragon"
+            className="w-full h-full object-contain"
+            onError={(e) => {
+              // Fallback to emoji if image fails to load
+              const target = e.currentTarget as HTMLImageElement;
+              target.style.display = 'none';
+              target.parentElement!.innerHTML = '<div class="text-6xl">🐉</div>';
+            }}
+          />
+        </div>
         <div className="absolute bottom-32 right-12 text-4xl opacity-15 animate-pulse">⚡</div>
         <div className="absolute top-24 right-16 text-3xl opacity-10 animate-bounce" style={{animationDelay: '0.5s'}}>✨</div>
         <div className="absolute bottom-48 left-12 text-4xl opacity-15 animate-pulse" style={{animationDelay: '1s'}}>⭐</div>
@@ -94,98 +159,184 @@ const ProfileModal = ({ isOpen, onClose }: ProfileModalProps) => {
         </div>
       </div>
 
-        {/* Shoutout Banner - For top players */}
+        {/* Winzone Activation Banner - Professional Layout */}
         <div className="px-6 pb-4">
-          <div className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-2xl p-4 text-center border-2 border-gold animate-pulse-gold">
-            <div className="text-white font-bold text-sm mb-1">🏆 FEATURED PLAYER 🏆</div>
-            <div className="text-white/90 text-xs">Top performer this week! Congratulations!</div>
+          <div className="bg-gradient-to-r from-purple-500 via-indigo-600 to-blue-600 rounded-2xl p-4 border-2 border-purple-400/50 shadow-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <div className="flex items-center space-x-2 mb-2">
+                  <span className="text-2xl">⚡</span>
+                  <h3 className="text-white font-bold text-lg">Winzone Boost</h3>
+                </div>
+                <p className="text-white/90 text-sm mb-1 leading-relaxed">
+                  Earn double VIP points for 6 hours during the boost window.
+                </p>
+                <div className="text-white/80 text-xs">
+                  {timerActive ? (
+                    <div className="flex items-center space-x-2">
+                      <span className="animate-pulse">🔥</span>
+                      <span>Active: {formatTime(timeRemaining)} remaining</span>
+                    </div>
+                  ) : (
+                    winzoneLeft > 0 ? `${winzoneLeft}/3 activations left` : 'No activations left'
+                  )}
+                </div>
+              </div>
+
+              <div className="ml-4">
+                <button
+                  onClick={handleWinzoneActivation}
+                  disabled={winzoneLeft === 0 || timerActive}
+                  className={`winzone-button font-bold py-3 px-6 rounded-xl transition-all duration-300 transform ${
+                    winzoneLeft > 0 && !timerActive
+                      ? 'bg-white/20 hover:bg-white/30 text-white shadow-lg hover:shadow-white/50 hover:scale-110 active:scale-95 border border-white/30'
+                      : 'bg-gray-600/50 text-gray-300 cursor-not-allowed border border-gray-500/30'
+                  } ${isActivated && !timerActive ? 'animate-pulse bg-green-500/30 border-green-400' : ''}`}
+                >
+                  {timerActive ? 'Active' : isActivated ? '✓ Activated!' : winzoneLeft > 0 ? 'Activate' : 'Locked'}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Profile Info */}
         <div className="px-6 pb-4">
-          <div className="bg-gradient-to-r from-game-purple to-game-purple-dark rounded-2xl p-4 text-center">
-            <div className="flex justify-center mb-3">
-              <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-gold relative">
-                <img src={winnerAvatar} alt="Profile" className="w-full h-full object-cover" />
-                {/* Platinum badge */}
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center text-xs">
-                  👑
+          <div className="bg-gradient-to-r from-orange-400 to-yellow-500 rounded-2xl p-4 text-center relative overflow-hidden">
+            {/* Background pattern */}
+            <div className="absolute inset-0 opacity-20">
+              <div className="w-full h-full bg-gradient-to-br from-orange-600/30 to-yellow-600/30"></div>
+            </div>
+
+            <div className="relative z-10">
+              <div className="flex justify-center mb-3">
+                <div className="w-16 h-16 rounded-full overflow-hidden border-4 border-purple-500 relative">
+                  <img src={winnerAvatar} alt="Profile" className="w-full h-full object-cover" />
                 </div>
               </div>
-            </div>
-            <div className="flex items-center justify-center space-x-2 mb-1">
-              <div className="text-foreground font-bold text-lg">Joined: 08.08.25</div>
-              <div className="bg-gradient-to-r from-purple-400 to-pink-400 px-2 py-1 rounded-full text-white text-xs font-bold">
-                PLATINUM
+              <div className="text-black font-bold text-lg mb-1">Joined: 08.08.25</div>
+              <div className="text-black/80 text-sm mb-4">789****180</div>
+
+              {/* VIP Tier Banner - Professional */}
+              <div className="bg-gradient-to-r from-amber-500 to-yellow-500 rounded-xl p-4 border-2 border-amber-400">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-16 h-16 flex items-center justify-center">
+                      <img
+                        src={lionImg}
+                        alt="Lion"
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          // Fallback to emoji if image fails to load
+                          const target = e.currentTarget as HTMLImageElement;
+                          target.style.display = 'none';
+                          target.parentElement!.innerHTML = '<div class="text-4xl">🦁</div>';
+                        }}
+                      />
+                    </div>
+                    <div className="text-left">
+                      <div className="text-white font-bold text-lg">LION</div>
+                      <div className="text-white/90 text-sm">Current Level</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-16 h-16 flex items-center justify-center">
+                      <img
+                        src={phoenixImg}
+                        alt="Phoenix"
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          // Fallback to emoji if image fails to load
+                          const target = e.currentTarget as HTMLImageElement;
+                          target.style.display = 'none';
+                          target.parentElement!.innerHTML = '<div class="text-4xl">🔥</div>';
+                        }}
+                      />
+                    </div>
+                    <div className="text-right">
+                      <div className="text-white font-bold text-sm">PHOENIX</div>
+                      <div className="text-white/90 text-xs">Next Level</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="mb-3">
+                  <div className="flex justify-between text-white text-sm mb-1">
+                    <span>Progress in August</span>
+                    <span>25 VIP Points to unlock</span>
+                  </div>
+                  <div className="w-full h-2 bg-black/30 rounded-full">
+                    <div className="w-1/3 h-full bg-white rounded-full"></div>
+                  </div>
+                </div>
+
+                {/* Benefits Preview */}
+                <div className="grid grid-cols-3 gap-2 text-center">
+                  <div className="bg-black/20 rounded-lg p-2">
+                    <div className="text-white text-xs">Bonus Per 100 VIP</div>
+                    <div className="text-white font-bold">₹6</div>
+                  </div>
+                  <div className="bg-black/20 rounded-lg p-2">
+                    <div className="text-white text-xs">Customer Support</div>
+                    <div className="text-green-400 text-lg">✓</div>
+                  </div>
+                  <div className="bg-black/20 rounded-lg p-2">
+                    <div className="text-white text-xs">Bonus Usage</div>
+                    <div className="text-white font-bold">3X</div>
+                  </div>
+                </div>
+
+                {/* More Details Button */}
+                <Button
+                  onClick={() => navigateTo('tierDetails')}
+                  className="w-full mt-3 bg-white/20 hover:bg-white/30 text-white font-bold py-2 rounded-lg transition-all duration-300"
+                >
+                  More Details
+                </Button>
               </div>
             </div>
-            <div className="text-foreground/80 text-sm">789****180</div>
           </div>
         </div>
 
-        {/* VIP Level Section */}
+        {/* Available Rewards */}
         <div className="px-6 pb-4">
-          <div className="bg-secondary/30 rounded-2xl p-4">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-game-purple font-bold">VIP Progress</span>
-              <span className="text-game-purple text-sm">Earn 8K XP to unlock next level</span>
-            </div>
-            
-            {/* Current VIP Level */}
-            <div className="bg-gradient-to-r from-amber-600 to-amber-800 rounded-xl p-3 mb-4">
-              <div className="text-center">
-                <div className="text-white font-bold text-lg">{currentVIPLevel}</div>
-                <div className="text-white/80 text-sm">Current Level</div>
+          <h3 className="text-white font-bold text-xl mb-4">Available Rewards</h3>
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl p-4 border border-blue-400/30">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
+                  <span className="text-2xl">📘</span>
+                </div>
+                <div>
+                  <div className="text-white font-bold">Link social profile</div>
+                  <div className="text-white/80 text-sm">Link your social profile and get flat ₹2 reward</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-white font-bold text-lg">₹2</div>
+                <Button className="bg-green-500 hover:bg-green-400 text-white font-bold px-4 py-1 rounded-full text-sm mt-1">
+                  CLAIM
+                </Button>
               </div>
             </div>
-
-            {/* XP Progress */}
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-game-purple font-bold">{currentXP.toLocaleString()} XP</span>
-                <span className="text-game-purple text-sm">
-                  {(nextLevelXP - currentXP).toLocaleString()} XP to next level
-                </span>
-              </div>
-              <Progress value={progressPercentage} className="h-2" />
-            </div>
-
-            {/* Details Button */}
-            <Button
-              variant="secondary"
-              onClick={() => navigateTo('tierDetails')}
-              className="w-full mt-4 bg-secondary/50 text-game-purple hover:bg-secondary/70"
-            >
-              View All VIP Benefits
-              <ChevronRight className="w-4 h-4 ml-2" />
-            </Button>
           </div>
         </div>
 
 
-        {/* Referrals Section */}
+        {/* Overall Summary */}
         <div className="px-6 pb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-game-purple font-bold text-lg">Referrals</h3>
-            <Button 
-              size="sm" 
-              className="bg-gradient-to-r from-success to-success/80 text-success-foreground hover:scale-105 transition-transform shadow-glow-success"
-            >
-              <span className="mr-2">🎁</span>
-              Refer Friend
-            </Button>
-          </div>
+          <h3 className="text-white font-bold text-xl mb-4">Overall summary</h3>
           <div className="grid grid-cols-3 gap-3">
             {[
-              { label: 'Referred', value: '3', icon: '👥' },
-              { label: 'Earned', value: '₹150', icon: '💰' },
-              { label: 'Bonus XP', value: '500', icon: '⭐' }
+              { label: 'Games', value: '0', icon: '🎮' },
+              { label: 'Winnings', value: '₹0', icon: '🏆' },
+              { label: 'Rewards', value: '₹20', icon: '🎁' }
             ].map((item) => (
-              <div key={item.label} className="bg-game-purple/80 rounded-xl p-3 text-center">
-                <div className="text-2xl mb-1">{item.icon}</div>
-                <div className="text-foreground font-bold text-lg">{item.value}</div>
-                <div className="text-foreground/70 text-sm">{item.label}</div>
+              <div key={item.label} className="bg-gradient-to-br from-purple-600 to-purple-800 rounded-xl p-4 text-center">
+                <div className="text-2xl mb-2">{item.icon}</div>
+                <div className="text-white font-bold text-2xl">{item.value}</div>
+                <div className="text-white/70 text-sm">{item.label}</div>
               </div>
             ))}
           </div>

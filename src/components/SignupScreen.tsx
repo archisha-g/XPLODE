@@ -87,8 +87,8 @@ const SignupScreen = ({ onBack, onContinue }: SignupScreenProps) => {
 
           {/* Phone input */}
           <div className="space-y-4">
-            <div className="flex space-x-3">
-              <div className="flex items-center bg-input rounded-lg px-3 py-3 border border-border">
+            <div className="flex space-x-3 items-center">
+              <div className="flex items-center bg-input rounded-lg px-4 py-3 border border-border min-w-[80px] justify-center">
                 <span className="mr-2">🇮🇳</span>
                 <span className="text-foreground font-medium">+91</span>
               </div>
@@ -97,7 +97,7 @@ const SignupScreen = ({ onBack, onContinue }: SignupScreenProps) => {
                 placeholder="Enter Mobile Number"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-                className="flex-1 bg-input border-border text-foreground placeholder:text-muted-foreground py-3 text-lg"
+                className="flex-1 bg-input border-border text-foreground placeholder:text-muted-foreground py-3 text-lg h-12"
               />
             </div>
 

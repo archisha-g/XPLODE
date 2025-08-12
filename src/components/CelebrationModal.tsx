@@ -65,10 +65,10 @@ const CelebrationModal = ({ isOpen, onClose }: CelebrationModalProps) => {
           {/* Main announcement */}
           <div className="space-y-2">
             <h2 className="text-2xl font-bold text-warning">
-              🎉 Congratulations! 🎉
+              🎉 Welcome to WinZO! 🎉
             </h2>
             <p className="text-lg font-bold text-foreground">
-              Niraj Sharma has won this month's challenge!
+              You've successfully joined the gaming community!
             </p>
           </div>
 
